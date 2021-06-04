@@ -4,21 +4,21 @@ services:
   portainer:
     image: portainer/portainer-ce
     container_name: portainer-ce
-    secrets: 
-      - portainer-admin-pw
+    # secrets: 
+    #   - portainer-admin-pw
     environment:
       - PUID=1000
       - PGID=100
       - TZ=Australia/Melbourne
-    command: --admin-password-file /run/secrets/portainer-admin-pw
+    # command: --admin-password-file /run/secrets/portainer-admin-pw
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data:/data
+      - ./config:/data
     ports:
       - 9000:9000
     restart: unless-stopped
-secrets:
-  portainer-admin-pw:
-    file: ./secrets/admin-pw
-    # external: true
+# secrets:
+#   portainer-admin-pw:
+#     file: ./secrets/admin-pw
+#     # external: true
 
