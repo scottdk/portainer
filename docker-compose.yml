@@ -16,7 +16,7 @@ services:
       - ./config:/data
     ports:
       - 9000:9000
-    restart: unless-stopped
+    restart: always
 # secrets:
 #   portainer-admin-pw:
 #     file: ./secrets/admin-pw
