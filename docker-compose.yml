@@ -2,38 +2,21 @@
 version: '3.1'
 services:
   portainer:
-    image: portainer/portainer-ce
-    container_name: portainer
-    # user: 1001:1001
-    # secrets: 
-    #   - portainer-admin-pw
+    extends:
+      file: docker-compose-no-proxy.yml
+      service: portainer
+
     environment:
-      # - UID=1001
-      # - GID=1001
-      - TZ=Australia/Melbourne
-      - VIRTUAL_HOST=por.fetfit.club,pt.fetfit.club,p.fetfit.club,port.fetfit.club,portainer.fetfit.club
+      - VIRTUAL_HOST=por.${PROXY_DOMAIN},pt.${PROXY_DOMAIN},p.${PROXY_DOMAIN},port.${PROXY_DOMAIN},portainer.${PROXY_DOMAIN}
       - VIRTUAL_PORT=9000
-      - LETSENCRYPT_HOST=por.fetfit.club,pt.fetfit.club,p.fetfit.club,port.fetfit.club,portainer.fetfit.club
-    # command: --admin-password-file /run/secrets/portainer-admin-pw
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - config:/data
-      # - ./config-portainer:/data
-      # - /path/to/your/certs:/certs
+      - LETSENCRYPT_HOST=por.${PROXY_DOMAIN},pt.${PROXY_DOMAIN},p.${PROXY_DOMAIN},port.${PROXY_DOMAIN},portainer.${PROXY_DOMAIN}
+
     networks: 
-        - "docker-proxy"
-    ports:
-      - 8000:8000
-      - 9000:9000
-      # - 9443:9443
-    restart: always
+      - "docker-proxy"
 
 networks:
   docker-proxy:
     external: true
+
 volumes:
   config:
-
-
-# docker network create net
-# https://linuxhandbook.com/nginx-reverse-proxy-docker/
