@@ -1,0 +1,19 @@
+---
+version: '3.1'
+services:
+  port-proxy:
+    extends:
+      file: docker-compose.yml
+      service: portainer
+
+    environment:
+      - VIRTUAL_HOST=por.${PROXY_DOMAIN},pt.${PROXY_DOMAIN},p.${PROXY_DOMAIN},port.${PROXY_DOMAIN},portainer.${PROXY_DOMAIN}
+      - VIRTUAL_PORT=9000
+      - LETSENCRYPT_HOST=por.${PROXY_DOMAIN},pt.${PROXY_DOMAIN},p.${PROXY_DOMAIN},port.${PROXY_DOMAIN},portainer.${PROXY_DOMAIN}
+
+    networks: 
+      - "docker-proxy"
+
+networks:
+  docker-proxy:
+    external: true

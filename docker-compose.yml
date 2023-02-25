@@ -11,9 +11,9 @@ services:
       # - UID=1001
       # - GID=1001
       - TZ=Australia/Melbourne
-      - VIRTUAL_HOST=por.fet.fit,pt.fet.fit,p.fet.fit,port.fet.fit,portainer.fet.fit
+      - VIRTUAL_HOST=por.fetfit.club,pt.fetfit.club,p.fetfit.club,port.fetfit.club,portainer.fetfit.club
       - VIRTUAL_PORT=9000
-      - LETSENCRYPT_HOST=por.fet.fit,pt.fet.fit,p.fet.fit,port.fet.fit,portainer.fet.fit
+      - LETSENCRYPT_HOST=por.fetfit.club,pt.fetfit.club,p.fetfit.club,port.fetfit.club,portainer.fetfit.club
     # command: --admin-password-file /run/secrets/portainer-admin-pw
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -24,7 +24,7 @@ services:
         - "docker-proxy"
     ports:
       - 8000:8000
-      # - 9000:9000
+      - 9000:9000
       # - 9443:9443
     restart: always
 
