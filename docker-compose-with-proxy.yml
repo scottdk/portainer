@@ -7,9 +7,9 @@ services:
       service: portainer
 
     environment:
-      - VIRTUAL_HOST=por.${PROXY_DOMAIN},pt.${PROXY_DOMAIN},p.${PROXY_DOMAIN},port.${PROXY_DOMAIN},portainer.${PROXY_DOMAIN}
+      - VIRTUAL_HOST=pt.${PROXY_DOMAIN},portainer.${PROXY_DOMAIN}
       - VIRTUAL_PORT=9000
-      - LETSENCRYPT_HOST=por.${PROXY_DOMAIN},pt.${PROXY_DOMAIN},p.${PROXY_DOMAIN},port.${PROXY_DOMAIN},portainer.${PROXY_DOMAIN}
+      - LETSENCRYPT_HOST=pt.${PROXY_DOMAIN},portainer.${PROXY_DOMAIN}
 
     networks: 
       - "docker-proxy"
