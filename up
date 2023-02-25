@@ -3,10 +3,10 @@
 export HOSTNAME
 
 if [[ ! -z `docker compose version 2>/dev/null` ]]; then
-  docker compose --env-file "../env/$HOSTNAME.env" down
-  docker compose --env-file "../env/$HOSTNAME.env" up -d
+  docker compose --env-file "../env/$HOSTNAME.env" -f docker-compose-with-proxy.yml down
+  docker compose --env-file "../env/$HOSTNAME.env" -f docker-compose-with-proxy.yml up -d
 else
-  docker-compose --env-file "../env/$HOSTNAME.env" down
-  docker-compose --env-file "../env/$HOSTNAME.env" up -d
+  docker-compose --env-file "../env/$HOSTNAME.env" -f docker-compose-with-proxy.yml down
+  docker-compose --env-file "../env/$HOSTNAME.env" -f docker-compose-with-proxy.yml up -d
 fi
 
