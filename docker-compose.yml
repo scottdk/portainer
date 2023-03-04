@@ -4,22 +4,48 @@ services:
   portainer:
     image: portainer/portainer-ce
     container_name: portainer
-    env_file:
-      - "../env/ace.env"
+    # env_file:
+    #   - "../env/ace.env"
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=Australia/Melbourne    
+    labels:
+    
+    
+      # portainer
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.fet.fit`)"
+      - "traefik.http.routers.portainer.entrypoints=websecure"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.http.routers.portainer.service=portainer"
+      - "traefik.http.routers.portainer.tls.certresolver=lets-encrypt"
+
+      # Edge
+      - "traefik.http.routers.edge.rule=Host(`edge.fet.fit`)"
+      - "traefik.http.routers.edge.entrypoints=websecure"
+      - "traefik.http.services.edge.loadbalancer.server.port=8000"
+      - "traefik.http.routers.edge.service=edge"
+      - "traefik.http.routers.edge.tls.certresolver=lets-encrypt"
+
+      # - "traefik.enable=true"
+      # - traefik.http.routers.portainer.rule=Host(`portainer.fet.fit`)
+      # - traefik.http.routers.portainer.tls=true
+      # - traefik.http.routers.portainer.tls.certresolver=lets-encrypt
+      # - traefik.port=9000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - config:/data
     networks: 
-        - "docker-proxy"
-    ports:
-      - 8000:8000
-      - 9000:9000
+        - "web"
+    # ports:
+    #   - 8000:8000
+    #   - 9000:9000
     restart: always
 
 networks:
-  docker-proxy:
+  web:
     external: true
+  # internal:
+  #   external: false
+
 volumes:
   config:
