@@ -13,33 +13,65 @@ services:
     
       # portainer
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`portainer.fet.fit`)"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.q.fet.fit`)"
       - "traefik.http.routers.portainer.entrypoints=websecure"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "traefik.http.routers.portainer.service=portainer"
       - "traefik.http.routers.portainer.tls.certresolver=lets-encrypt"
 
-      # Edge
-      - "traefik.http.routers.edge.rule=Host(`edge.fet.fit`)"
-      - "traefik.http.routers.edge.entrypoints=websecure"
-      - "traefik.http.services.edge.loadbalancer.server.port=8000"
-      - "traefik.http.routers.edge.service=edge"
-      - "traefik.http.routers.edge.tls.certresolver=lets-encrypt"
+      # # Edge
+      # - "traefik.http.routers.edge.rule=Host(`edge.fet.fit`)"
+      # - "traefik.http.routers.edge.entrypoints=websecure"
+      # - "traefik.http.services.edge.loadbalancer.server.port=8000"
+      # - "traefik.http.routers.edge.service=edge"
+      # - "traefik.http.routers.edge.tls.certresolver=lets-encrypt"
 
-      # - "traefik.enable=true"
-      # - traefik.http.routers.portainer.rule=Host(`portainer.fet.fit`)
-      # - traefik.http.routers.portainer.tls=true
-      # - traefik.http.routers.portainer.tls.certresolver=lets-encrypt
-      # - traefik.port=9000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - config:/data
-    networks: 
-        - "web"
-    # ports:
-    #   - 8000:8000
-    #   - 9000:9000
+    networks:   
+      web:
+        ipv4_address: 172.28.20.111
+     #- "web"
+    ports:
+      - 8000:8000
+      - 9000:9000
     restart: always
+
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    environment:
+      DOZZLE_LEVEL: debug
+      DOZZLE_USERNAME_FILE: /run/secrets/dozzle_user
+      DOZZLE_PASSWORD_FILE: /run/secrets/dozzle_password
+    networks:   
+      web:
+        ipv4_address: 172.28.20.112
+     #- "web"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    secrets:
+      - dozzle_user
+      - dozzle_password
+    ports:
+      - 9999:8080    
+    labels:
+      # - "traefik.enable=true"
+      # ## HTTP Routers
+      # - "traefik.http.routers.dozzle.entrypoints=websecure"
+      # - "traefik.http.routers.dozzle.rule=Host(`dozzle.q.fet.fit`)"
+      # ## Middlewares
+      # - "traefik.http.routers.dozzle.middlewares=chain-oauth@file"
+      # ## HTTP Services
+      # - "traefik.http.routers.dozzle.service=dozzle"
+      # - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      - "traefik.enable=true"
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.q.fet.fit`)"
+      - "traefik.http.routers.dozzle.entrypoints=websecure"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      - "traefik.http.routers.dozzle.service=dozzle"
+      - "traefik.http.routers.dozzle.tls.certresolver=lets-encrypt"
 
 networks:
   web:
@@ -49,3 +81,9 @@ networks:
 
 volumes:
   config:
+
+secrets:
+  dozzle_user:
+    file: ./secrets/dozzle_user
+  dozzle_password:
+    file: ./secrets/dozzle_password
