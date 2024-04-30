@@ -2,14 +2,14 @@
 version: '3.1'
 services:
   portainer:
-    image: portainer/portainer-ce
+    # image: portainer/portainer-ce
+    image: portainer/portainer-ee:latest
     container_name: portainer
     # env_file:
     #   - "../env/ace.env"
     environment:
       - TZ=Australia/Melbourne    
     labels:
-    
     
       # portainer
       - "traefik.enable=true"
@@ -28,7 +28,7 @@ services:
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - config:/data
+      - ./config/portainer:/data
     networks:   
       web:
         ipv4_address: 172.28.20.111
@@ -37,6 +37,28 @@ services:
       - 8000:8000
       - 9000:9000
     restart: always
+
+  yacht:
+    container_name: yacht
+    restart: always
+    ports:
+      - 8800:8000
+    networks:   
+      web:
+        ipv4_address: 172.28.20.119
+    volumes:
+      - ./config/yacht:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    image: selfhostedpro/yacht
+    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.yacht.rule=Host(`yacht.q.fet.fit`)"
+      - "traefik.http.routers.yacht.entrypoints=websecure"
+      - "traefik.http.services.yacht.loadbalancer.server.port=8000"
+      - "traefik.http.routers.yacht.service=portainer"
+      - "traefik.http.routers.yacht.tls.certresolver=lets-encrypt"
+
 
   dozzle:
     container_name: dozzle
@@ -72,6 +94,7 @@ services:
       - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
       - "traefik.http.routers.dozzle.service=dozzle"
       - "traefik.http.routers.dozzle.tls.certresolver=lets-encrypt"
+    restart: always
 
 networks:
   web:
@@ -79,8 +102,6 @@ networks:
   # internal:
   #   external: false
 
-volumes:
-  config:
 
 secrets:
   dozzle_user:
