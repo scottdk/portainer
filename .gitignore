@@ -1,2 +1,4 @@
 config/
-secrets/
+.env
+.portainer.env
+kubernetes/
